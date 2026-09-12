@@ -93,19 +93,22 @@ async function lovableImage({ prompt }: Gen) {
 }
 
 const PROVIDERS: Record<string, (g: Gen) => Promise<{ bytes: Uint8Array; mimeType: string }>> = {
+  deapi: deapiImage,
   openai: openaiImage,
   gemini: geminiImage,
   huggingface: hfImage,
   lovable: lovableImage,
 };
 
+const ORDER = ["deapi", "openai", "gemini", "huggingface", "lovable"];
+
 export const IMAGE_PROVIDERS = Object.keys(PROVIDERS);
 
 export async function generateImage(gen: Gen): Promise<StoredAsset & { fallbacks?: unknown }> {
   const order =
     gen.provider && gen.provider !== "auto"
-      ? [gen.provider, ...["openai", "gemini", "huggingface", "lovable"].filter((p) => p !== gen.provider)]
-      : ["openai", "gemini", "huggingface", "lovable"];
+      ? [gen.provider, ...ORDER.filter((p) => p !== gen.provider)]
+      : ORDER;
 
   const result = await withFallback(
     "la génération d'image",
