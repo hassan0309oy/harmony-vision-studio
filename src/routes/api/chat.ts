@@ -12,6 +12,7 @@ import { deerflowTools } from "@/lib/deerflow-tools.server";
 import { loadMcpTools } from "@/lib/providers/mcp.server";
 import { readPreferences } from "@/lib/providers/settings.server";
 import { createVideoEditingTools, mediaTools } from "@/lib/media-tools.server";
+import { createDeapiTools, embedTextsTool } from "@/lib/deapi-tools.server";
 import { agentTools } from "@/lib/agent-tools.server";
 import { createMediaAnalysisTools } from "@/lib/media-analysis-tools.server";
 import { createVisualReferenceTools } from "@/lib/visual-tools.server";
@@ -188,6 +189,8 @@ export const Route = createFileRoute("/api/chat")({
             ...deerflowTools,
             ...mediaTools,
             ...createVideoEditingTools(user.id),
+            ...createDeapiTools(user.id),
+            embed_texts: embedTextsTool,
             ...agentTools,
             ...createMediaAnalysisTools(user.id),
             ...createVisualReferenceTools(user.id),
