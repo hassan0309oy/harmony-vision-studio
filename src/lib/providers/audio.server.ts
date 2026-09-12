@@ -122,13 +122,14 @@ async function lovableTts(text: string, voiceId?: string) {
 }
 
 const TTS: Record<string, (t: string, v?: string) => Promise<{ bytes: Uint8Array; mimeType: string }>> = {
+  deapi: deapiTts,
   elevenlabs: elevenTts,
   kokoro: kokoroTts,
   piper: piperTts,
   lovable: lovableTts,
 };
 
-const TTS_ORDER = ["elevenlabs", "kokoro", "piper", "lovable"];
+const TTS_ORDER = ["deapi", "elevenlabs", "kokoro", "piper", "lovable"];
 
 export const TTS_PROVIDERS = Object.keys(TTS);
 
@@ -248,7 +249,13 @@ export async function generateMusic(params: {
     return downloadBytes(url, "audio/wav");
   };
 
+  const deapi = async () => {
+    if (!optionalEnv("DEAPI_API_KEY")) throw new Error("DEAPI_API_KEY absente");
+    return deapiMusic({ prompt: params.prompt, durationSeconds: seconds });
+  };
+
   const map: Record<string, () => Promise<{ bytes: Uint8Array; mimeType: string }>> = {
+    deapi,
     elevenlabs,
     huggingface: hf,
     replicate,
@@ -256,7 +263,7 @@ export async function generateMusic(params: {
   const order =
     params.provider && params.provider !== "auto"
       ? [params.provider]
-      : ["elevenlabs", "huggingface", "replicate"];
+      : ["deapi", "elevenlabs", "huggingface", "replicate"];
 
   const result = await withFallback(
     "la génération de musique",
