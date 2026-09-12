@@ -31,9 +31,15 @@ export const Route = createFileRoute("/api/capabilities")({
           {
             id: "image",
             label: "Génération d'images",
-            ready: has("OPENAI_API_KEY") || has("GEMINI_API_KEY") || has("HF_TOKEN") || has("LOVABLE_API_KEY"),
+            ready:
+              has("DEAPI_API_KEY") ||
+              has("OPENAI_API_KEY") ||
+              has("GEMINI_API_KEY") ||
+              has("HF_TOKEN") ||
+              has("LOVABLE_API_KEY"),
             missing: [],
             providers: [
+              { name: "deapi", ready: has("DEAPI_API_KEY") },
               { name: "openai", ready: has("OPENAI_API_KEY") },
               { name: "gemini", ready: has("GEMINI_API_KEY") },
               { name: "huggingface", ready: has("HF_TOKEN") },
@@ -43,9 +49,11 @@ export const Route = createFileRoute("/api/capabilities")({
           {
             id: "video",
             label: "Génération vidéo",
-            ready: has("RUNWAY_API_KEY") || has("REPLICATE_API_TOKEN"),
-            missing: has("RUNWAY_API_KEY") || has("REPLICATE_API_TOKEN") ? [] : ["RUNWAY_API_KEY"],
+            ready: has("DEAPI_API_KEY") || has("RUNWAY_API_KEY") || has("REPLICATE_API_TOKEN") || has("LOVABLE_API_KEY"),
+            missing: [],
             providers: [
+              { name: "deapi", ready: has("DEAPI_API_KEY") },
+              { name: "lovable", ready: has("LOVABLE_API_KEY") },
               { name: "runway", ready: has("RUNWAY_API_KEY") },
               { name: "replicate", ready: has("REPLICATE_API_TOKEN") },
             ],
@@ -54,6 +62,7 @@ export const Route = createFileRoute("/api/capabilities")({
             id: "audio",
             label: "Voix, podcast & musique",
             ready:
+              has("DEAPI_API_KEY") ||
               has("ELEVENLABS_API_KEY") ||
               has("KOKORO_API_URL") ||
               has("PIPER_API_URL") ||
@@ -61,6 +70,7 @@ export const Route = createFileRoute("/api/capabilities")({
               has("LOVABLE_API_KEY"),
             missing: [],
             providers: [
+              { name: "deapi", ready: has("DEAPI_API_KEY") },
               { name: "elevenlabs", ready: has("ELEVENLABS_API_KEY") },
               { name: "kokoro", ready: has("KOKORO_API_URL") },
               { name: "piper", ready: has("PIPER_API_URL") },
@@ -68,6 +78,34 @@ export const Route = createFileRoute("/api/capabilities")({
               { name: "huggingface (musique)", ready: has("HF_TOKEN") },
             ],
 
+          },
+          {
+            id: "image_editing",
+            label: "Retouche, détourage & agrandissement d'images",
+            ready: has("DEAPI_API_KEY"),
+            missing: has("DEAPI_API_KEY") ? [] : ["DEAPI_API_KEY"],
+          },
+          {
+            id: "image_to_video",
+            label: "Image animée en vidéo",
+            ready: has("DEAPI_API_KEY"),
+            missing: has("DEAPI_API_KEY") ? [] : ["DEAPI_API_KEY"],
+          },
+          {
+            id: "transcription",
+            label: "Transcription audio & vidéo",
+            ready: has("DEAPI_API_KEY"),
+            missing: has("DEAPI_API_KEY") ? [] : ["DEAPI_API_KEY"],
+          },
+          {
+            id: "embeddings",
+            label: "Embeddings (recherche sémantique)",
+            ready: has("DEAPI_API_KEY") || has("LOVABLE_API_KEY"),
+            missing: [],
+            providers: [
+              { name: "deapi", ready: has("DEAPI_API_KEY") },
+              { name: "lovable", ready: has("LOVABLE_API_KEY") },
+            ],
           },
           { id: "pptx", label: "PowerPoint .pptx", ready: true, missing: [] },
           {
