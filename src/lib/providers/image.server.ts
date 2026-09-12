@@ -1,7 +1,14 @@
 import { b64ToBytes, storeAsset, type StoredAsset } from "./storage.server";
 import { optionalEnv, withFallback } from "./errors.server";
+import { deapiGenerateImage } from "./deapi.server";
 
 type Gen = { prompt: string; size?: string; provider?: string };
+
+/** DeAPI — fournisseur principal (clé DEAPI_API_KEY). */
+async function deapiImage({ prompt, size }: Gen) {
+  if (!optionalEnv("DEAPI_API_KEY")) throw new Error("DEAPI_API_KEY absente");
+  return deapiGenerateImage({ prompt, ...(size ? { size } : {}) });
+}
 
 /** OpenAI Images (gpt-image-2, repli gpt-image-1). */
 async function openaiImage({ prompt, size }: Gen) {
