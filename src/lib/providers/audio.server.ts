@@ -1,6 +1,13 @@
 import { storeAsset, type StoredAsset } from "./storage.server";
 import { optionalEnv, withFallback } from "./errors.server";
 import { downloadBytes, replicateRun } from "./replicate.server";
+import { deapiMusic, deapiSpeech } from "./deapi.server";
+
+/** DeAPI (Kokoro) — voix principale. */
+async function deapiTts(text: string, voiceId?: string) {
+  if (!optionalEnv("DEAPI_API_KEY")) throw new Error("DEAPI_API_KEY absente");
+  return deapiSpeech({ text, ...(voiceId ? { voice: voiceId } : {}) });
+}
 
 
 const ELEVEN_DEFAULT_VOICE = "21m00Tcm4TlvDq8ikWAM"; // Rachel
