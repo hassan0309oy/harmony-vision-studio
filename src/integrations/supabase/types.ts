@@ -14,7 +14,165 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      app_preferences: {
+        Row: {
+          key: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
+      mcp_servers: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          last_error: string | null
+          name: string
+          tool_names: string[]
+          transport: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          name: string
+          tool_names?: string[]
+          transport?: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          name?: string
+          tool_names?: string[]
+          transport?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
+      media_assets: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          metadata: Json
+          mime_type: string
+          prompt: string | null
+          provider: string
+          storage_path: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          metadata?: Json
+          mime_type: string
+          prompt?: string | null
+          provider: string
+          storage_path: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          metadata?: Json
+          mime_type?: string
+          prompt?: string | null
+          provider?: string
+          storage_path?: string
+        }
+        Relationships: []
+      }
+      memories: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          importance: number
+          session_id: string
+          tags: string[]
+          updated_at: string
+          vector_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          importance?: number
+          session_id?: string
+          tags?: string[]
+          updated_at?: string
+          vector_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          importance?: number
+          session_id?: string
+          tags?: string[]
+          updated_at?: string
+          vector_id?: string | null
+        }
+        Relationships: []
+      }
+      scheduled_tasks: {
+        Row: {
+          active: boolean
+          created_at: string
+          cron: string
+          id: string
+          instruction: string
+          last_result: string | null
+          last_run_at: string | null
+          next_run_at: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          cron: string
+          id?: string
+          instruction: string
+          last_result?: string | null
+          last_run_at?: string | null
+          next_run_at?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          cron?: string
+          id?: string
+          instruction?: string
+          last_result?: string | null
+          last_run_at?: string | null
+          next_run_at?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
