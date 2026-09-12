@@ -1,8 +1,19 @@
 import { storeAsset, type StoredAsset } from "./storage.server";
 import { httpJson, optionalEnv, withFallback } from "./errors.server";
 import { downloadBytes, replicateRun } from "./replicate.server";
+import { deapiGenerateVideo, deapiImageToVideo } from "./deapi.server";
 
-type Gen = { prompt: string; provider?: string; durationSeconds?: number };
+type Gen = { prompt: string; provider?: string; durationSeconds?: number; size?: string };
+
+/** DeAPI — fournisseur principal (clé DEAPI_API_KEY). */
+async function deapiVideo({ prompt, durationSeconds, size }: Gen) {
+  if (!optionalEnv("DEAPI_API_KEY")) throw new Error("DEAPI_API_KEY absente");
+  return deapiGenerateVideo({
+    prompt,
+    ...(durationSeconds ? { durationSeconds } : {}),
+    ...(size ? { size } : {}),
+  });
+}
 
 const RUNWAY_VERSION = "2024-11-06";
 
