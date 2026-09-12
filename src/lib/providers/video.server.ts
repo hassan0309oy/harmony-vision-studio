@@ -132,3 +132,30 @@ export async function generateVideo(gen: Gen): Promise<StoredAsset> {
     prompt: gen.prompt,
   });
 }
+
+/** Image → vidéo : anime une image existante avec DeAPI. */
+export async function animateImageToVideo(params: {
+  imageBytes: Uint8Array;
+  mimeType: string;
+  prompt: string;
+  fileName?: string;
+  durationSeconds?: number;
+  size?: string;
+}): Promise<StoredAsset> {
+  const result = await deapiImageToVideo({
+    imageBytes: params.imageBytes,
+    mimeType: params.mimeType,
+    prompt: params.prompt,
+    ...(params.fileName ? { fileName: params.fileName } : {}),
+    ...(params.durationSeconds ? { durationSeconds: params.durationSeconds } : {}),
+    ...(params.size ? { size: params.size } : {}),
+  });
+  return storeAsset({
+    kind: "video",
+    data: result.bytes,
+    mimeType: result.mimeType,
+    provider: "deapi",
+    prompt: params.prompt,
+    metadata: { source: "image-to-video" },
+  });
+}
