@@ -107,6 +107,7 @@ async function lovableVideo({ prompt, durationSeconds }: Gen) {
 }
 
 const PROVIDERS: Record<string, (g: Gen) => Promise<{ bytes: Uint8Array; mimeType: string }>> = {
+  deapi: deapiVideo,
   lovable: lovableVideo,
   runway: runwayVideo,
   replicate: replicateVideo,
@@ -116,7 +117,9 @@ export const VIDEO_PROVIDERS = Object.keys(PROVIDERS);
 
 export async function generateVideo(gen: Gen): Promise<StoredAsset> {
   const order =
-    gen.provider && gen.provider !== "auto" ? [gen.provider] : ["lovable", "runway", "replicate"];
+    gen.provider && gen.provider !== "auto"
+      ? [gen.provider]
+      : ["deapi", "lovable", "runway", "replicate"];
   const result = await withFallback(
     "la génération de vidéo",
     order.filter((n) => PROVIDERS[n]).map((name) => ({ name, run: () => PROVIDERS[name]!(gen) })),
