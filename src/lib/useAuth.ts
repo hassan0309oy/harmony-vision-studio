@@ -1,0 +1,34 @@
+import { useEffect, useState } from "react";
+import type { Session } from "@supabase/supabase-js";
+
+import { supabase } from "@/integrations/supabase/client";
+
+export function useAuth() {
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, next) => {
+      setSession(next);
+      setLoading(false);
+    });
+    void supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setLoading(false);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  return {
+    session,
+    user: session?.user ?? null,
+    loading,
+    signOut: () => supabase.auth.signOut(),
+  };
+}
+
+export async function authHeaders(): Promise<Record<string, string>> {
+  const { data } = await supabase.auth.getSession();
+  const token = data.session?.access_token;
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
